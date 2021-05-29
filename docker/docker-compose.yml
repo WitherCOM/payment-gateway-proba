@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./teszt:/srv/http
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    links:
+      - php
+
+  php:
+    image: ./php8-fpm-image
+    volumes:
+      - ./teszt:/srv/http
+    links:
+      - db
+
+  db:
+    image: postgres:alpine
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    enviroment:
+      POSTGRES_PASSWORD: payment
+      POSTGRES_USER: paymentgateway

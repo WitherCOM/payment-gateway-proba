@@ -19,6 +19,7 @@ class CreatePhonesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('phoneNumber',13);
             $table->boolean('isDefault')->default(false);
+            $table->timestamps();
         });
     }
 

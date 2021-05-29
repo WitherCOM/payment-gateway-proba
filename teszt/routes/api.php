@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::namespace('App\Http\Controllers')->prefix('v1')->group(function () {
-    Route::get('teszt',function(){
-        return 'okay';
-    });
+    Route::get('read','UserController@read');
     Route::post('create','UserController@create');
     Route::delete('delete/{user}','UserController@delete');
     Route::put('update/{user}','UserController@update');
