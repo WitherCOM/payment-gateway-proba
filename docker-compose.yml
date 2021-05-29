@@ -5,7 +5,7 @@ services:
     volumes:
       - ./teszt:/srv/http
       - ./nginx:/etc/nginx/conf.d
-    workdir: /srv/http
+    working_dir: /srv/http
     ports:
       - "80:80"
     links:
