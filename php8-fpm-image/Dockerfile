@@ -1,15 +1,10 @@
-FROM php:8-fpm
+FROM php:8-fpm-apline3.13
 
-RUN apk add php8-bcmath \
-            php8-ctype \
-            php8-fileinfo \
-            php8-json \
-            php8-mbstring \
-            php8-openssl \
-            php8-pdo \
-            php8-tokenizer \
-            php8-xml \
-            php8-pgsql \
+RUN apk add --no-cache postgresql-dev \            
             composer
+RUN docker-php-ext-install-j2 pgsql pdo_pqsql
+RUN rm -rf /var/cache/apk/*
 
 COPY ./www.conf /etc/php8/php-fpm.d
+COPY ./php.ini /etc/php8
+COPY ./php.ini /usr/local/etc/php
