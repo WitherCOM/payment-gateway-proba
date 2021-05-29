@@ -11,7 +11,7 @@ services:
       - php
 
   php:
-    image: ./php8-fpm-image
+    build: ./php8-fpm-image
     volumes:
       - ./teszt:/srv/http
     links:
@@ -21,6 +21,6 @@ services:
     image: postgres:alpine
     volumes:
       - ./postgres:/var/lib/postgresql/data
-    enviroment:
+    environment:
       POSTGRES_PASSWORD: payment
       POSTGRES_USER: paymentgateway

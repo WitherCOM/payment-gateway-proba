@@ -9,4 +9,7 @@ RUN apk add php8-bcmath \
             php8-pdo \
             php8-tokenizer \
             php8-xml \
-            php8-pgsql
+            php8-pgsql \
+            composer
+
+COPY ./www.conf /etc/php8/php-fpm.d
