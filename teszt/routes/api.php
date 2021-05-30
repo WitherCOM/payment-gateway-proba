@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use App\Models\Phone;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::namespace('App\Http\Controllers')->prefix('v1')->group(function () {
-    Route::get('read','UserController@read');
-    Route::post('create','UserController@create');
-    Route::delete('delete/{user}','UserController@delete');
-    Route::put('update/{user}','UserController@update');
+    Route::get('user','UserController@read');
+    Route::post('user','UserController@create');
+    Route::delete('user/{user}','UserController@delete');
+    Route::put('user/{user}','UserController@update');
+    Route::get('teszt',function(){
+        $users = Phone::all();
+        return $users;
+    });
 });

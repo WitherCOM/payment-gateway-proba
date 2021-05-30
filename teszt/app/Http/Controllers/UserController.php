@@ -25,17 +25,13 @@ class UserController extends Controller
         {
             return response()->json($validation->errors(),406);
         }
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->dateOfBirth = $request->dateOfBirth;
-        $user->isActive = $request->isActive;
+        $user = new User($request->all());
         $user->save();
 
         $phone = new Phone;
-        $phone->user_id = $user->id;
         $phone->phoneNumber = $request->phoneNumber;
         $phone->isDefault = true;
+        $phone->user()->associate($user);
         $phone->save();
 
         return response()->json(['message'=>'User created!'],200);
@@ -77,53 +73,27 @@ class UserController extends Controller
     {
 
         try{
-        $validation = Validator::make($request->all(),[
-            'name' => 'required|max:30',
-            'email' => 'required|email|max:50',
-            'dateOfBirth' => 'required|date',
-            'isActive' => 'required|boolean',
-            'phoneNumber' => 'required|max:13|regex:/^\+36[0-9]{9,10}$/'
-        ]);
-        if($validation->fails())
-        {
-            return response()->json($validation->errors(),406);
+            $validation = Validator::make($request->all(),[
+                'name' => 'max:30',
+                'email' => 'email|max:50',
+                'dateOfBirth' => 'date',
+                'isActive' => 'boolean',
+                'phoneNumber' => 'max:13|regex:/^\+36[0-9]{9,10}$/'
+            ]);
+            if($validation->fails())
+            {
+                return response()->json($validation->errors(),406);
+            }
+
+            $user->update($request->all());
+            $user->defaultPhone->update($request->all());
+
+            return response()->json(['message'=>'User '.$user->id.' updated!'],200);
         }
-
-
-        if($request->has('name'))
+        catch(QueryException $e)
         {
-            $user->name = $request->name;
+            return response()->json(['message'=>'Invalid user!'],404);
         }
-
-        if($request->has('email'))
-        {
-            $user->email = $request->email;
-        }
-
-        if($request->has('dateOfBirth'))
-        {
-            $user->dateOfBirth = $request->dateOfBirth;
-        }
-
-        if($request->has('isActive'))
-        {
-            $user->isActive = $request->isActive;
-        }
-
-        if($request->has('phoneNumber'))
-        {
-            $phone = $user->phones->where('isDefault','True');
-            $phone = $request->phoneNumber;
-            $phone->save();
-        }
-
-        $user->save();
-        return response()->json(['message'=>'User '.$user->id.' updated!'],200);
-    }
-catch(QueryException $e)
-{
-    return response()->json(['message'=>'Invalid user!'],404);
-}
     }
 
     public function delete($user)
