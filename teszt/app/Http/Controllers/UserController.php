@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Phone;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -52,7 +53,7 @@ class UserController extends Controller
         }
         else if($order == 'phoneNumber')
         {
-            $data = User::orderBy('phoneNumber')->paginate();
+            $data = User::select('users.*',DB::raw('(SELECT phoneNumber FROM phones WHERE users.id = phones.id and phones.isDefault = 1) as phoneNumber'))->orderBy('phoneNumber')->paginate();
         }
         else if($order == 'dateOfBirth')
         {
